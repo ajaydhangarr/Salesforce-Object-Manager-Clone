@@ -13,6 +13,11 @@ on:
         description: "Base commit/ref for delta (leave blank for HEAD~1)"
         required: false
         default: ""
+      force_full_deploy:
+        description: "Force full deployment of all metadata?"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: read
@@ -70,6 +75,11 @@ jobs:
           else
             FROM_COMMIT="${{ github.event.inputs.from_ref || github.event.before }}"
             TO_COMMIT="${{ github.sha }}"
+          fi
+
+          if [ "${{ github.event.inputs.force_full_deploy }}" = "true" ]; then
+            echo "Force full deploy requested. Diffing against empty tree."
+            FROM_COMMIT="4b825dc642cb6eb9a0ea0e47b6e41bc5759e3554"
           fi
 
           if [ -z "$FROM_COMMIT" ] || [ "$FROM_COMMIT" = "0000000000000000000000000000000000000000" ]; then
