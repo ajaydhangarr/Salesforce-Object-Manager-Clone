@@ -69,6 +69,9 @@ jobs:
         run: |
           mkdir -p changed-sources
 
+          # Ensure empty tree object exists in git database
+          git hash-object -w -t tree /dev/null || true
+
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             FROM_COMMIT="${{ github.event.pull_request.base.sha }}"
             TO_COMMIT="${{ github.event.pull_request.head.sha }}"
@@ -86,13 +89,13 @@ jobs:
             COMMIT_COUNT=$(git rev-list --count HEAD)
             if [ "$COMMIT_COUNT" -le 1 ]; then
               echo "First commit — deploying full force-app"
-              FROM_COMMIT=$(git hash-object -t tree /dev/null)
+              FROM_COMMIT="4b825dc642cb6eb9a0ea0e47b6e41bc5759e3554"
             else
               FROM_COMMIT="HEAD~1"
             fi
           fi
 
-          if ! git cat-file -e "${FROM_COMMIT}" 2>/dev/null; then
+          if [ "$FROM_COMMIT" != "4b825dc642cb6eb9a0ea0e47b6e41bc5759e3554" ] && ! git cat-file -e "${FROM_COMMIT}" 2>/dev/null; then
             echo "WARNING: FROM_COMMIT not found, falling back to HEAD~1"
             FROM_COMMIT="HEAD~1"
           fi
