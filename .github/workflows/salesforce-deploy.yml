@@ -82,7 +82,7 @@ jobs:
             fi
           fi
 
-          if ! git cat-file -e "${FROM_COMMIT}^{commit}" 2>/dev/null; then
+          if ! git cat-file -e "${FROM_COMMIT}" 2>/dev/null; then
             echo "WARNING: FROM_COMMIT not found, falling back to HEAD~1"
             FROM_COMMIT="HEAD~1"
           fi
