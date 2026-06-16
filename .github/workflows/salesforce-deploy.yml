@@ -69,8 +69,9 @@ jobs:
         run: |
           mkdir -p changed-sources
 
-          # Ensure empty tree object exists in git database
-          git hash-object -w -t tree /dev/null || true
+          # Get empty tree SHA dynamically (typically 4b825dc642cb6eb9a060e54bf8d69288fbee4904)
+          EMPTY_TREE_SHA=$(git hash-object -w -t tree /dev/null || echo "4b825dc642cb6eb9a060e54bf8d69288fbee4904")
+          echo "Empty tree SHA: $EMPTY_TREE_SHA"
 
           if [ "${{ github.event_name }}" = "pull_request" ]; then
             FROM_COMMIT="${{ github.event.pull_request.base.sha }}"
@@ -82,20 +83,20 @@ jobs:
 
           if [ "${{ github.event.inputs.force_full_deploy }}" = "true" ]; then
             echo "Force full deploy requested. Diffing against empty tree."
-            FROM_COMMIT="4b825dc642cb6eb9a0ea0e47b6e41bc5759e3554"
+            FROM_COMMIT="$EMPTY_TREE_SHA"
           fi
 
           if [ -z "$FROM_COMMIT" ] || [ "$FROM_COMMIT" = "0000000000000000000000000000000000000000" ]; then
             COMMIT_COUNT=$(git rev-list --count HEAD)
             if [ "$COMMIT_COUNT" -le 1 ]; then
               echo "First commit — deploying full force-app"
-              FROM_COMMIT="4b825dc642cb6eb9a0ea0e47b6e41bc5759e3554"
+              FROM_COMMIT="$EMPTY_TREE_SHA"
             else
               FROM_COMMIT="HEAD~1"
             fi
           fi
 
-          if [ "$FROM_COMMIT" != "4b825dc642cb6eb9a0ea0e47b6e41bc5759e3554" ] && ! git cat-file -e "${FROM_COMMIT}" 2>/dev/null; then
+          if [ "$FROM_COMMIT" != "$EMPTY_TREE_SHA" ] && ! git cat-file -e "${FROM_COMMIT}" 2>/dev/null; then
             echo "WARNING: FROM_COMMIT not found, falling back to HEAD~1"
             FROM_COMMIT="HEAD~1"
           fi
