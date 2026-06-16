@@ -498,13 +498,13 @@ getObjectFields(String objectName) {
                 normalizedApiName
             );
 
-            Map<String, Object> payload =
-                new Map<String, Object>{
-                    'FullName' => objectName + '.' + normalizedApiName,
-                    'Metadata' => buildCustomFieldMetadata(fieldDefinition, label, typeInput)
-                };
-
             try {
+                Map<String, Object> payload =
+                    new Map<String, Object>{
+                        'FullName' => objectName + '.' + normalizedApiName,
+                        'Metadata' => buildCustomFieldMetadata(fieldDefinition, label, typeInput)
+                    };
+
                 Map<String, Object> response =
                     restPostJson(
                         '/tooling/sobjects/CustomField',
@@ -930,6 +930,7 @@ getObjectFields(String objectName) {
 
     }
 
+    @TestVisible
     private static String
     extractDurableIdToken(String durableId) {
 
@@ -952,6 +953,7 @@ getObjectFields(String objectName) {
 
     }
 
+    @TestVisible
     private static String
     extractDeveloperName(String fieldApiName) {
 
@@ -972,6 +974,7 @@ getObjectFields(String objectName) {
 
     }
 
+    @TestVisible
     private static String
     normalizeSalesforceId(String candidateId) {
 
@@ -1026,6 +1029,7 @@ getObjectFields(String objectName) {
 
     }
 
+    @TestVisible
     private static String
     normalizeCustomFieldApiName(
         String apiNameInput,
