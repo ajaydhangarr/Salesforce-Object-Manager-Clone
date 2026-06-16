@@ -1,0 +1,6 @@
+Label,API Name,Type,Length,Precision,Scale,Required,PicklistValues,DefaultValue,Description
+Alternative Email,Alternative_Email__c,Text,150,,,FALSE,,FALSE,Alternative email address for contact
+Annual Performance Score,Performance_Score__c,Number,,5,2,FALSE,,FALSE,Score from 0 to 100
+Membership Level,Membership_Level__c,Picklist,,,TRUE,"Silver,Gold,Platinum",FALSE,Customer loyalty tier
+Terms Accepted,Terms_Accepted__c,Checkbox,,,FALSE,,TRUE,Has user accepted privacy terms
+Contract End Date,Contract_End_Date__c,Date,,,FALSE,,FALSE,Date when the agreement ends
